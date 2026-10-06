@@ -4,7 +4,7 @@ import { useContext, useState, type FormEvent } from "react";
 import { AuthContext } from "../../context/auth-context";
 import type { ValidationErrors } from "../../interfaces/validation-error";
 import Cookies from "js-cookie";
-import { AxiosError } from "axios";
+import { AxiosError, type AxiosResponse } from "axios";
 import type { User } from "../../interfaces/user";
 
 export default function Login() {
@@ -24,18 +24,19 @@ export default function Login() {
         password,
       },
       {
-        onSuccess: (data: User) => {
+        onSuccess: (response: AxiosResponse<User>) => {
+          const payload = response.data;
           //set token to cookie
-          Cookies.set("token", data.token);
+          Cookies.set("token", payload.token);
 
           //set user to cookie
           Cookies.set(
             "user",
             JSON.stringify({
-              id: data.id,
-              name: data.name,
-              username: data.username,
-              email: data.email,
+              id: payload.id,
+              name: payload.name,
+              username: payload.username,
+              email: payload.email,
             }),
           );
 
